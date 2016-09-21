@@ -1,6 +1,7 @@
 package moe.feng.oechan.dao;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -18,6 +19,7 @@ public class HomePageKeeper {
 	private static final String FILE_NAME = "home.json";
 
 	private static HomePageKeeper sInstance;
+	private String TAG = "HomePageKeeper";
 
 	public static HomePageKeeper getInstance(Context context) {
 		if (sInstance == null) {
@@ -39,7 +41,7 @@ public class HomePageKeeper {
 			e.printStackTrace();
 			json = "{\"data\":[]}";
 		}
-
+		Log.e(TAG, "reload: json:" + json );
 		list = GsonUtils.fromJson(json, MyArray.class);
 	}
 

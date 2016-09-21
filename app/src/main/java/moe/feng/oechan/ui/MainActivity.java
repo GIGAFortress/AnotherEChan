@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import moe.feng.oechan.R;
 import moe.feng.oechan.api.HomeApi;
@@ -26,17 +27,18 @@ public class MainActivity extends AbsActivity
 
 	private HomePageKeeper mPageKeeper;
 	private FavouritesManager mFavManager;
+	private final String TAG = "MainActivity";
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-	    mPageKeeper = HomePageKeeper.getInstance(getApplicationContext());
-	    mFavManager = FavouritesManager.getInstance(getApplicationContext());
+	    mPageKeeper = HomePageKeeper.getInstance(getApplicationContext());	//不知道这个做什么用
+	    mFavManager = FavouritesManager.getInstance(getApplicationContext());	//也是不知道做什么用
 
-	    mListView = $(R.id.recycler_view);
-	    mRefreshLayout = $(R.id.refresh_layout);
+	    mListView = $(R.id.recycler_view);		//recyclerView寻找ID
+	    mRefreshLayout = $(R.id.refresh_layout);		//refreshLayout下拉初始化
 
 	    setUpRecyclerView();
 	    setUpRefreshLayout();
@@ -124,6 +126,7 @@ public class MainActivity extends AbsActivity
 
 		@Override
 		protected BaseMessage<PageListResult> doInBackground(Integer... integers) {
+			Log.e(TAG, "doInBackground: ");
 			BaseMessage<PageListResult> result = HomeApi.getPage("zh-TW", integers[0] - 1);
 			if (result.getCode() == BaseMessage.CODE_OKAY) {
 				result.getData().buildFormattedText(MainActivity.this);
@@ -133,6 +136,7 @@ public class MainActivity extends AbsActivity
 
 		@Override
 		protected void onPostExecute(BaseMessage<PageListResult> result) {
+			Log.e(TAG, "onPostExecute: ");
 			if (isDestroyed() || isFinishing()) return;
 
 			mRefreshLayout.setRefreshing(false);
