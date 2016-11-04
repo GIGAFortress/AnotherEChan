@@ -34,8 +34,8 @@ public class MainActivity extends AbsActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-	    mPageKeeper = HomePageKeeper.getInstance(getApplicationContext());	//不知道这个做什么用
-	    mFavManager = FavouritesManager.getInstance(getApplicationContext());	//也是不知道做什么用
+	    mPageKeeper = HomePageKeeper.getInstance(getApplicationContext());	//HomePageKeeper初始化
+	    mFavManager = FavouritesManager.getInstance(getApplicationContext());	//FavouritesManager初始化
 
 	    mListView = $(R.id.recycler_view);		//recyclerView寻找ID
 	    mRefreshLayout = $(R.id.refresh_layout);		//refreshLayout下拉初始化
@@ -43,10 +43,21 @@ public class MainActivity extends AbsActivity
 	    setUpRecyclerView();
 	    setUpRefreshLayout();
 
+		/*
+		* 开起来的时候mPageKeeper.list() 不为空，list其实就是该对象中的myArray的数据， size也是指其大小
+		* mPageKeeper中的.list主要是myArray数据，其中主要是data，data 是 List<PageListResult.Item> 类型数据
+		*
+		* */
 	    if (mPageKeeper.list() != null && mPageKeeper.size() > 0) {
+			/*
+			* 填充列表的更新时间buildFormattedText
+			* */
 		    mPageKeeper.buildFormattedText(this);
 		    mAdapter.setData(mPageKeeper.list());
 		    mAdapter.notifyDataSetChanged();
+			/*
+			* 最后一次成功刷新的时间超过一小时就刷新
+			* */
 		    if (System.currentTimeMillis() - mPageKeeper.getUpdatedMiles() > 60 * 60 * 1000) {
 			    onRefresh();
 		    }
@@ -105,6 +116,7 @@ public class MainActivity extends AbsActivity
 		mFavManager.save();
 	}
 
+	//RefreshListner在这里
 	@Override
 	public void onRefresh() {
 		if (!mRefreshLayout.isRefreshing()) {
@@ -124,10 +136,13 @@ public class MainActivity extends AbsActivity
 
 	private class GetPageTask extends AsyncTask<Integer, Void, BaseMessage<PageListResult>> {
 
+		/*
+		* 刷新时使用，更新数据的入口在这里
+		* */
 		@Override
 		protected BaseMessage<PageListResult> doInBackground(Integer... integers) {
 			Log.e(TAG, "doInBackground: ");
-			BaseMessage<PageListResult> result = HomeApi.getPage("zh-TW", integers[0] - 1);
+			BaseMessage<PageListResult> result = HomeApi.getPage("zh-TW", integers[0] - 1);	//所有元素的入口
 			if (result.getCode() == BaseMessage.CODE_OKAY) {
 				result.getData().buildFormattedText(MainActivity.this);
 			}

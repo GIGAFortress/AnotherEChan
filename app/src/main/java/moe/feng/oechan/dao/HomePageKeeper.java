@@ -13,7 +13,7 @@ import moe.feng.oechan.support.GsonUtils;
 
 public class HomePageKeeper {
 
-	private MyArray list;
+	private MyArray myArray;
 	private Context context;
 
 	private static final String FILE_NAME = "home.json";
@@ -42,31 +42,31 @@ public class HomePageKeeper {
 			json = "{\"data\":[]}";
 		}
 		Log.e(TAG, "reload: json:" + json );
-		list = GsonUtils.fromJson(json, MyArray.class);
+		myArray = GsonUtils.fromJson(json, MyArray.class);
 	}
 
 	public PageListResult.Item get(int index) {
-		return list.data.get(index);
+		return myArray.data.get(index);
 	}
 
 	public void add(PageListResult.Item item) {
-		list.data.add(item);
+		myArray.data.add(item);
 	}
 
 	public void addAll(Collection<? extends PageListResult.Item> newList) {
-		list.data.addAll(newList);
+		myArray.data.addAll(newList);
 	}
 
 	public void set(int index, PageListResult.Item item) {
-		list.data.set(index, item);
+		myArray.data.set(index, item);
 	}
 
 	public void clear() {
-		list.data.clear();
+		myArray.data.clear();
 	}
 
 	public int size() {
-		return list.data.size();
+		return myArray.data.size();
 	}
 
 	public int indexOf(int id) {
@@ -89,34 +89,37 @@ public class HomePageKeeper {
 	}
 
 	public List<PageListResult.Item> list() {
-		return list.data;
+		return myArray.data;
 	}
 
 	public int getNowPage() {
-		return list.nowPage;
+		return myArray.nowPage;
 	}
 
 	public void setNowPage(int nowPage) {
-		list.nowPage = nowPage;
+		myArray.nowPage = nowPage;
 	}
 
 	public long getUpdatedMiles() {
-		return list.updateTime;
+		return myArray.updateTime;
 	}
 
 	public void setUpdatedMiles(long updatedMiles) {
-		list.updateTime = updatedMiles;
+		myArray.updateTime = updatedMiles;
 	}
 
+	/*
+	* 把HomePageKeeper里的所有数据给更新一下
+	* */
 	public void buildFormattedText(Context context) {
-		for (PageListResult.Item item : list.data) {
+		for (PageListResult.Item item : myArray.data) {
 			item.buildFormattedUpdatedAt(context);
 		}
 	}
 
 	public void save() {
 		try {
-			FileUtils.saveStringToFile(context, FILE_NAME, GsonUtils.toJson(list));
+			FileUtils.saveStringToFile(context, FILE_NAME, GsonUtils.toJson(myArray));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
