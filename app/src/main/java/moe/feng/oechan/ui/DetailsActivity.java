@@ -91,6 +91,9 @@ public class DetailsActivity extends AbsActivity
 	public static void launch(AbsActivity activity, PageListResult.Item data, int position) {
 		Intent intent = new Intent(activity, DetailsActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		/*
+		* GesonUtils.toJson(data)： {"formattedUpdatedAt":"11 月 3 日 11:51","id":230,"name":"一課一練 ONE LESSON ONE FIGHT","updated_At":"2016-11-03T03:25:22.5333983"}
+		* */
 		intent.putExtra(EXTRA_DATA_JSON, GsonUtils.toJson(data));
 		intent.putExtra(EXTRA_POSITION, position);
 		activity.startActivity(intent);

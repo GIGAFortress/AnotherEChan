@@ -43,6 +43,12 @@ public class DetailsGridAdapter extends RecyclerView.Adapter<DetailsGridAdapter.
 		this.onItemClickListener = clickListener;
 	}
 
+	/*
+	* RecyclerView.Adapter implement方法 onCreateViewHolder
+	* parent是一个引用，应该是对应的每个CardView
+	* picasso初始化
+	* onCreateViewHolder会为每一个View执行两遍，5个卡片执行了10次，6个卡片执行了12次
+	* */
 	@Override
 	public DetailsGridAdapter.ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		if (picasso == null || CLICK_COUNT_FORMAT == null || EPISODE_FORMAT == null) {
@@ -57,6 +63,9 @@ public class DetailsGridAdapter extends RecyclerView.Adapter<DetailsGridAdapter.
 		);
 	}
 
+	/*
+	* Adapter implement 方法
+	* */
 	@Override
 	public void onBindViewHolder(DetailsGridAdapter.ItemHolder holder, int position) {
 		DetailsResult.Episode item = data.get(position);
@@ -76,11 +85,17 @@ public class DetailsGridAdapter extends RecyclerView.Adapter<DetailsGridAdapter.
 				);
 	}
 
+	/*
+	* implement方法
+	* */
 	@Override
 	public int getItemCount() {
 		return data != null ? data.size() : 0;
 	}
 
+	/*
+	* 必有
+	* */
 	class ItemHolder extends RecyclerView.ViewHolder {
 
 		TextView title, text;
